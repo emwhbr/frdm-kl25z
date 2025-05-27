@@ -7,6 +7,7 @@ set(ROOT_CMAKE "${CMAKE_CURRENT_LIST_DIR}" CACHE INTERNAL "" FORCE)
 # Since the TARGET is predefined literal for the CMAKE build
 # generator, we shall use TARGET_HW from now on internally.
 set(TARGET_HW ${TARGET})
+set(TARGET_HW_EXT "elf")
 
 include(cmake/build_type.cmake)
 include(cmake/colors.cmake)
@@ -37,14 +38,15 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 set(NXP_SDK "nxp_sdk" CACHE INTERNAL "")
 
 # Target to be used for the project, predefined path
-set(PROJECT_TARGET "targets/${TARGET_HW}" CACHE INTERNAL "")
+set(PROJECT_TARGET     "targets/${TARGET_HW}" CACHE INTERNAL "")
+set(PROJECT_TARGET_EXT "${TARGET_HW_EXT}" CACHE INTERNAL "")
 
 set(deps_list
     ${NXP_SDK}
     ${PROJECT_TARGET}
 )
 
-# Adds all dependency list to the build system queue.
+# Adds all dependency list to the build system queue
 macro(add_deps)
 foreach(Deps IN LISTS deps_list)
     add_subdirectory(${Deps})

@@ -83,9 +83,9 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${MKL25Z128_LD_FLAGS}")
 # Macro to get statistics on memory usage
 macro(memory_statistics)
 if (CMAKE_ELFSIZE)
-    add_custom_command(TARGET ${PROJECT_NAME}
+    add_custom_command(TARGET ${PROJECT_NAME}.${PROJECT_TARGET_EXT}
         POST_BUILD
-        COMMAND ${CMAKE_ELFSIZE} ${PROJECT_NAME}
+        COMMAND ${CMAKE_ELFSIZE} ${PROJECT_NAME}.${PROJECT_TARGET_EXT}
         DEPENDS ${PROJECT_NAME}
     )
 else()
@@ -98,14 +98,17 @@ macro(convert_to_firmware_filetype)
 
 # Getting and saving the path of the resulting file
 set(ARTIFACT_HEX "${PROJECT_NAME}_${TARGET_HW}.hex")
+set(ARTIFACT_BIN "${PROJECT_NAME}_${TARGET_HW}.bin")
 
 # Converting the file type to the one we can write to target's memory
 if (CMAKE_OBJCOPY)
-    add_custom_command(TARGET ${PROJECT_NAME}
+    add_custom_command(TARGET ${PROJECT_NAME}.${PROJECT_TARGET_EXT}
         POST_BUILD
-        COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:${PROJECT_NAME}>
+        COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:${PROJECT_NAME}.${PROJECT_TARGET_EXT}>
                 ${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_NAME:${ARTIFACT_HEX}>
-        COMMENT "Firmware file: ${CMAKE_CURRENT_BINARY_DIR}/${ARTIFACT_HEX} generated"
+        COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${PROJECT_NAME}.${PROJECT_TARGET_EXT}>
+                ${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_NAME:${ARTIFACT_BIN}>
+        COMMENT "Firmware file: ${CMAKE_CURRENT_BINARY_DIR}/${ARTIFACT_HEX} generated\nFirmware file: ${CMAKE_CURRENT_BINARY_DIR}/${ARTIFACT_BIN} generated"
     )
 else()
     message(WARNING "${Red}'objcopy' not found:${ColorReset} cannot generate firmware file(s)")
