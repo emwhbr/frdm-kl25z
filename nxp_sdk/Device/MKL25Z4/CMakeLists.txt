@@ -16,7 +16,7 @@ set(source_files
     gcc/startup_MKL25Z4.S
 )
 
-# We want a STATIC library (libproj-support.a)
+# We want a STATIC library (device-mkl25z4.a)
 add_library(${PROJECT_NAME} STATIC ${source_files})
 
 # Expose the include folder for the library
