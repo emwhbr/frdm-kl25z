@@ -37,12 +37,16 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 # NXP SDK, predefined path
 set(NXP_SDK "nxp_sdk" CACHE INTERNAL "")
 
+# Target support, predefined path
+set(PROJECT_TARGET_SUPPORT "targets/support" CACHE INTERNAL "")
+
 # Target to be used for the project, predefined path
 set(PROJECT_TARGET     "targets/${TARGET_HW}" CACHE INTERNAL "")
 set(PROJECT_TARGET_EXT "${TARGET_HW_EXT}" CACHE INTERNAL "")
 
 set(deps_list
     ${NXP_SDK}
+    ${PROJECT_TARGET_SUPPORT}
     ${PROJECT_TARGET}
 )
 

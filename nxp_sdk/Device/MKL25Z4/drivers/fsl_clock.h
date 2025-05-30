@@ -32,6 +32,9 @@
 #ifndef _FSL_CLOCK_H_
 #define _FSL_CLOCK_H_
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+
 #include "fsl_common.h"
 
 /*! @addtogroup clock */
@@ -1390,5 +1393,7 @@ status_t CLOCK_SetMcgConfig(mcg_config_t const *config);
 #endif /* __cplusplus */
 
 /*! @} */
+
+#pragma GCC diagnostic pop
 
 #endif /* _FSL_CLOCK_H_ */

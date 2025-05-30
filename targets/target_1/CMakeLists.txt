@@ -5,6 +5,7 @@ add_executable(${PROJECT_NAME}.${PROJECT_TARGET_EXT}
 
 target_link_libraries(${PROJECT_NAME}.${PROJECT_TARGET_EXT}
    device-mkl25z4         # NXP SDK
+   target-support         # Target support library
 )
 
 memory_statistics()
