@@ -1,3 +1,9 @@
+#include "MKL25Z4.h"
+
+#include "fsl_clock.h"
+#include "fsl_gpio.h"
+#include "fsl_port.h"
+
 #include "debug_io.h"
 
 typedef enum
@@ -12,179 +18,178 @@ typedef enum
 #define DEBUG_IO_SPI_DATA  DEBUG_IO_PIN_3  // SPI MOSI
 #define DEBUG_IO_SPI_CLK   DEBUG_IO_PIN_4  // SPI CLK
 
-static const uint8_t s_debug_io_pin_gpio[DEBUG_IO_PIN_MAX] =
+typedef struct
 {
-   10, // DEBUG_IO_PIN_1, GP10, Pin14
-   11, // DEBUG_IO_PIN_2, GP11, Pin15
-   12, // DEBUG_IO_PIN_3, GP12, Pin16
-   13, // DEBUG_IO_PIN_4, GP13, Pin17
-};
+   PORT_Type *port;
+   GPIO_Type *gpio;
+   uint32_t   pin;
+} debug_io_pin_cfg_t;
 
+static const debug_io_pin_cfg_t s_debug_io_pin_cfg[DEBUG_IO_PIN_MAX] =
+{
+   { PORTB, GPIOB,  8u },  // PIN 1: PTB8,  pin47, Connector J9-01
+   { PORTB, GPIOB,  9u },  // PIN 2: PTB9,  pin48, Connector J9-03
+   { PORTB, GPIOB, 10u },  // PIN 3: PTB10, pin49, Connector J9-05
+   { PORTB, GPIOB, 11u }   // PIN 4: PTB11, pin50, Connector J9-07
+};
 
 ///////////////////////////////////////////////////////////////////////////
 
 void debug_io_init()
 {
-#if 0
-   // Initialize all debug pins as GPIO, outputs, all off
+   // All debug pins @ Port B
+   CLOCK_EnableClock(kCLOCK_PortB); // Port B Clock Gate Control: Clock enabled
+
+   // Start with all debug pins off.
+   gpio_pin_config_t led_config = { kGPIO_DigitalOutput, 0 };
+
    for (uint8_t i=0; i < DEBUG_IO_PIN_MAX; i++)
    {
-      gpio_init(s_debug_io_pin_gpio[i]);           // GPIO
-      gpio_set_dir(s_debug_io_pin_gpio[i], true);  // Output
-      gpio_put(s_debug_io_pin_gpio[i], false);     // Clear / off
+      PORT_SetPinMux(s_debug_io_pin_cfg[i].port, s_debug_io_pin_cfg[i].pin, kPORT_MuxAsGpio);
+      GPIO_PinInit(s_debug_io_pin_cfg[i].gpio, s_debug_io_pin_cfg[i].pin, &led_config);
    }
-#else
-   if (s_debug_io_pin_gpio[DEBUG_IO_PIN_1]) { ; }
-#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void debug_io_pin(uint8_t count_1, uint8_t count_2, uint8_t count_3, uint8_t count_4)
 {
-#if 0
    while (0 != count_1)
    {
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_1], true);
-      sleep_us(1);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_1].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_1].pin, 1);
+      //sleep_us(1);
       count_1--;
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_1], false);
-      sleep_us(1);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_1].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_1].pin, 0);
+      //sleep_us(1);
    }
 
    while (0 != count_2)
    {
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_2], true);
-      sleep_us(1);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_2].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_2].pin, 1);
+      //sleep_us(1);
       count_2--;
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_2], false);
-      sleep_us(1);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_2].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_2].pin, 0);
+      //sleep_us(1);
    }
 
    while (0 != count_3)
    {
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_3], true);
-      sleep_us(1);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_3].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_3].pin, 1);
+      //sleep_us(1);
       count_3--;
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_3], false);
-      sleep_us(1);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_3].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_3].pin, 0);
+      //sleep_us(1);
    }
 
    while (0 != count_4)
    {
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_4], true);
-      sleep_us(1);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_4].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_4].pin, 1);
+      //sleep_us(1);
       count_4--;
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_4], false);
-      sleep_us(1);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_4].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_4].pin, 0);
+      //sleep_us(1);
    }
-#else
-   (void)count_1;
-   (void)count_2;
-   (void)count_3;
-   (void)count_4;
-#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void debug_io_pin_on(bool pin_1, bool pin_2, bool pin_3, bool pin_4)
 {
-#if 0
    if (true == pin_1)
    {
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_1], true);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_1].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_1].pin, 1);
    }
 
    if (true == pin_2)
    {
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_2], true);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_2].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_2].pin, 1);
    }
 
    if (true == pin_3)
    {
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_3], true);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_3].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_3].pin, 1);
    }
 
    if (true == pin_4)
    {
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_4], true);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_4].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_4].pin, 1);
    }
-#else
-   (void)pin_1;
-   (void)pin_2;
-   (void)pin_3;
-   (void)pin_4;
-#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 void debug_io_pin_off(bool pin_1, bool pin_2, bool pin_3, bool pin_4)
 {
-#if 0
    if (true == pin_1)
    {
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_1], false);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_1].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_1].pin, 0);
    }
 
    if (true == pin_2)
    {
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_2], false);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_2].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_2].pin, 0);
    }
 
    if (true == pin_3)
    {
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_3], false);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_3].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_3].pin, 0);
    }
 
    if (true == pin_4)
    {
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_PIN_4], false);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_PIN_4].gpio, s_debug_io_pin_cfg[DEBUG_IO_PIN_4].pin, 0);
    }
-#else
-   (void)pin_1;
-   (void)pin_2;
-   (void)pin_3;
-   (void)pin_4;
-#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
-void debug_io_code(uint8_t code)
+void debug_io_code8(uint8_t code)
 {
-#if 0
    // SPI: 8bit, MSb first, CPOL=0, CPHA=0
    uint8_t clk = 8U;
 
    while (0 != clk)
    {
       // CLK low
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_SPI_CLK], false);
-      sleep_us(1);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_SPI_CLK].gpio, s_debug_io_pin_cfg[DEBUG_IO_SPI_CLK].pin, 0);
+      //sleep_us(1);
 
       // DATA
       if (code & 0x80)
       {
-         gpio_put(s_debug_io_pin_gpio[DEBUG_IO_SPI_DATA], true);
+         GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_SPI_DATA].gpio, s_debug_io_pin_cfg[DEBUG_IO_SPI_DATA].pin, 1);
       }
       else
       {
-         gpio_put(s_debug_io_pin_gpio[DEBUG_IO_SPI_DATA], false);
+         GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_SPI_DATA].gpio, s_debug_io_pin_cfg[DEBUG_IO_SPI_DATA].pin, 0);
       }
 
       code = (uint8_t)(code << 1U);
 
       // CLK high
-      gpio_put(s_debug_io_pin_gpio[DEBUG_IO_SPI_CLK], true);
-      sleep_us(1);
+      GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_SPI_CLK].gpio, s_debug_io_pin_cfg[DEBUG_IO_SPI_CLK].pin, 1);
+      //sleep_us(1);
       clk--;
    }
 
-   gpio_put(s_debug_io_pin_gpio[DEBUG_IO_SPI_CLK], false);
-   gpio_put(s_debug_io_pin_gpio[DEBUG_IO_SPI_DATA], false);
-#else
-   (void)code;
-#endif
+   GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_SPI_CLK].gpio, s_debug_io_pin_cfg[DEBUG_IO_SPI_CLK].pin, 0);
+   GPIO_WritePinOutput(s_debug_io_pin_cfg[DEBUG_IO_SPI_DATA].gpio, s_debug_io_pin_cfg[DEBUG_IO_SPI_DATA].pin, 0);
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void debug_io_code16(uint16_t code)
+{
+   debug_io_code8( (uint8_t)((uint16_t)(0xff00 & code) >> 8) );
+   debug_io_code8( (uint8_t)((uint16_t)(0x00ff & code) >> 0) );
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+void debug_io_code32(uint32_t code)
+{
+   debug_io_code8( (uint8_t)((uint32_t)(0xff000000 & code) >> 24) );
+   debug_io_code8( (uint8_t)((uint32_t)(0x00ff0000 & code) >> 16) );
+   debug_io_code8( (uint8_t)((uint32_t)(0x0000ff00 & code) >> 8) );
+   debug_io_code8( (uint8_t)((uint32_t)(0x000000ff & code) >> 0) );
 }
