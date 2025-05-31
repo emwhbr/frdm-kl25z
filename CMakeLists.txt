@@ -58,3 +58,6 @@ endforeach()
 endmacro()
 
 add_deps()
+
+include(cmake/programmer.cmake)
+enable_programmer()

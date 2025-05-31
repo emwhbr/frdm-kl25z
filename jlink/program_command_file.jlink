@@ -1,0 +1,6 @@
+device MKL25Z128XXX4
+si SWD
+speed 4000
+connect
+loadfile targets/target_1/frdm-kl25z_target_1.bin 0x0 reset
+exit

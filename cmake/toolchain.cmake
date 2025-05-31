@@ -98,7 +98,7 @@ macro(convert_to_firmware_filetype)
 
 # Getting and saving the path of the resulting file
 set(ARTIFACT_HEX "${PROJECT_NAME}_${TARGET_HW}.hex")
-set(ARTIFACT_BIN "${PROJECT_NAME}_${TARGET_HW}.bin")
+set(ARTIFACT_BIN "${PROJECT_NAME}_${TARGET_HW}.bin" CACHE INTERNAL "")
 
 # Converting the file type to the one we can write to target's memory
 if (CMAKE_OBJCOPY)
