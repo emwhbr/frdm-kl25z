@@ -72,7 +72,7 @@ add_link_options($<$<CONFIG:DEBUG>:--verbose>)
 set(MKL25Z128_LD_SCRIPT "${CMAKE_SOURCE_DIR}/nxp_sdk/Device/MKL25Z4/gcc/MKL25Z128xxx4_flash.ld")
 
 # Set the linker configuration
-set(MKL25Z128_LD_CONFIG "-Wl,--start-group -static -lc -lgcc -lstdc++ -lrdimon -Wl,--end-group -Wl,--gc-sections -specs=nosys.specs")
+set(MKL25Z128_LD_CONFIG "-Wl,--start-group -static -lc -lgcc -lstdc++ -Wl,--end-group -nostartfiles -Wl,--gc-sections -specs=nosys.specs")
 
 # Set the linker flags
 set(MKL25Z128_LD_FLAGS "${MKL25Z128_LD_CONFIG} -T${MKL25Z128_LD_SCRIPT} -Wl,-Map=target.map")

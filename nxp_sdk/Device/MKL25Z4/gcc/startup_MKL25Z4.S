@@ -169,6 +169,33 @@ Reset_Handler:
 .LC3:
 #endif
     cpsie   i               /* Unmask interrupts */
+#ifdef __CUSTOM_START
+
+    /* We skip the constructor / initializers.
+     * Hopefully, we will not use this functionality.
+     *
+     * ldr   r0,=__libc_init_array
+     * blx   r0
+    */
+
+    /* Make sure variable 'SystemCoreClock' is updated with correct value.
+     * The system clocks were configured in function SystemInit().
+     * But the initial value of the variable 'SystemCoreClock' was copied
+     * from read only memory to RAM after clock configuration.
+     */
+    ldr   r0,=SystemCoreClockUpdate
+    blx   r0
+
+    /* Initialize the target support library */
+    ldr   r0,=debug_io_init
+    blx   r0
+    ldr   r0,=led_init
+    blx   r0
+
+    ldr   r0,=main
+    bx    r0
+
+#else  /* __CUSTOM_START */
 #ifndef __START
 #define __START _start
 #endif
@@ -181,6 +208,7 @@ Reset_Handler:
     ldr   r0,=main
     bx    r0
 #endif
+#endif /* __CUSTOM_START */
     .pool
     .size Reset_Handler, . - Reset_Handler
 

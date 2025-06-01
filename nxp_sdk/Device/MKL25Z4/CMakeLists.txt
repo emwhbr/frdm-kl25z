@@ -10,6 +10,10 @@ set(PROJECT_INCLUDE_DIR
    ${CMAKE_CURRENT_SOURCE_DIR}/gcc
 )
 
+# Add preprocessor definitions when compiling source files in this project.
+# We need to set definitions to signal a customized start.
+add_compile_definitions(__CUSTOM_START=1 __STARTUP_CLEAR_BSS=1)
+
 # Use the source files for the library
 set(source_files
     system_MKL25Z4.c

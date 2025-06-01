@@ -12,13 +12,6 @@ static volatile uint8_t s_data_buffer[DATA_BUFFER_SIZE] = { 0 };
 
 void main(void)
 {
-   // Make sure variable 'SystemCoreClock' is updated with correct value
-   SystemCoreClockUpdate();
-
-   // Initialize the target support library
-   debug_io_init();
-   led_init();
-
    // Signal started -LED
    led_on(LED_ID_BLUE);
 
