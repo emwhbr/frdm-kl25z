@@ -12,6 +12,9 @@ static volatile uint8_t s_data_buffer[DATA_BUFFER_SIZE] = { 0 };
 
 void main(void)
 {
+   // Make sure variable 'SystemCoreClock' is updated with correct value
+   SystemCoreClockUpdate();
+
    // Initialize the target support library
    debug_io_init();
    led_init();
@@ -30,6 +33,10 @@ void main(void)
    debug_io_pin_on(1,0,0,0);
    debug_io_code32(0xa1b2c3d4);
    debug_io_pin_off(1,0,0,0);
+
+   // Check system core clock (CMSIS)
+   debug_io_code32(0xccccccc1);
+   debug_io_code32(SystemCoreClock);
 
    // Start looping
    while (1)

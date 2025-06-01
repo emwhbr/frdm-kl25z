@@ -40,6 +40,9 @@ set(NXP_SDK "nxp_sdk" CACHE INTERNAL "")
 # Target support, predefined path
 set(PROJECT_TARGET_SUPPORT "targets/support" CACHE INTERNAL "")
 
+# Hardware layer, predefined path
+set(HW_LAYER "targets/hw_layer" CACHE INTERNAL "")
+
 # Target to be used for the project, predefined path
 set(PROJECT_TARGET     "targets/${TARGET_HW}" CACHE INTERNAL "")
 set(PROJECT_TARGET_EXT "${TARGET_HW_EXT}" CACHE INTERNAL "")
@@ -47,6 +50,7 @@ set(PROJECT_TARGET_EXT "${TARGET_HW_EXT}" CACHE INTERNAL "")
 set(deps_list
     ${NXP_SDK}
     ${PROJECT_TARGET_SUPPORT}
+    ${HW_LAYER}
     ${PROJECT_TARGET}
 )
 

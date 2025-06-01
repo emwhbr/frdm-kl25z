@@ -106,6 +106,8 @@
 #include <stdint.h>
 #include "fsl_device_registers.h"
 
+// EMWHBR: Added - Configure system clocks
+#include "clock_config.h"
 
 
 /* ----------------------------------------------------------------------------
@@ -124,6 +126,10 @@ void SystemInit (void) {
   SIM->COPC = (uint32_t)0x00u;
 #endif /* (DISABLE_WDOG) */
 
+  /////////////////////////////////////////////////////
+  // EMWHBR: Added - Configure system clocks
+  BOARD_BootClockRUN();    // This function is implemented in the hardware layer (hw-api)
+  /////////////////////////////////////////////////////
 }
 
 /* ----------------------------------------------------------------------------

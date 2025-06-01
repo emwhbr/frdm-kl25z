@@ -28,4 +28,5 @@ target_include_directories(${PROJECT_NAME}
 # This library has dependencies to other parts of NXP SDK(CMSIS-Core)
 target_link_libraries(${PROJECT_NAME}
     CMSIS-Core            # CMSIS-Core
+    hw-api                # Hardware layer
 )
